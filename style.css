@@ -14,23 +14,18 @@
   display: inline-block;
   float: none;
   font-size: 60px;
-
-
 }
-
-.imagem-vitrine {
-
-}
-
 
 .produto {
   display: inline-block;
   height: inherit;
   float: none;
-
 }
 
-.visitado {
+.produto:hover {
+  font-weight: bolder;
+  text-decoration: underline;
+
 }
 
 .sugestao {
@@ -44,12 +39,10 @@
   font-size: 11px;
   line-height:15px;
   overflow:hidden;
-
 }
 
 .texto-simples {
   font-size: 11px;
-
 }
 
 .super-preco {
@@ -61,5 +54,14 @@
 .texto-destaque {
   color: rgb(206, 0, 0);
   font-size: 11px;
+}
+.imagem-vitrine{
 
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 70%;
 }

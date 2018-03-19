@@ -33,7 +33,7 @@ get_data(link).then(function(value) {
   recommendations = value.data.recommendation
   recommendations.map((e) => produto(e))
   product = produto(value.data.reference.item)
-  n_sugestoes = 0//(recommendations.slice(0,3).length) - 1
+  n_sugestoes = 0
 
   create_visitado(product)
   create_sugestao(recommendations.slice(0,3))
@@ -68,9 +68,9 @@ function create_bar(text1, text2){
 
 function create_visitado(produto){
   visitado.innerHTML = `<div class="produto">
-                      				<img class="row imagem-vitrine" src='${produto.imageName}' >
+                      				<img onclick="window.location.href='${produto.detailUrl}'" class="row center" src='${produto.imageName}' >
                       				<div class="row">
-                      					<div class="descricao"> ${produto.name}</div>
+                      					<div onclick="window.location.href='${produto.detailUrl}'" class="descricao"> ${produto.name}</div>
                       				</div>
                       				<div class="texto-simples row"> De: ${produto.oldPrice}</div>
                       				<div class="row">
@@ -84,28 +84,37 @@ function create_visitado(produto){
 
 function create_sugestao(lista){
   sugestao.innerHTML = `<div class="seta col-md-1">
-                    			<a class="page-link" href="#" aria-label="Previous">
-                    				<span onclick="more_recommendation(-3)" aria-hidden="true">&laquo;</span>
+                    			<a  id="seta-esquerda" class="page-link" href="#" aria-label="Previous">
+                    				<span style="color:gray" onclick="more_recommendation(-3)" aria-hidden="true">&laquo;</span>
                     			</a>
                           </div>`
-                          + lista.map((produto) => `<div class="produto col-md-2">
-                      				<img class="row imagem-vitrine" src='${produto.imageName}' >
-                      				<div class="row">
-                      					<div class="descricao"> ${produto.name}</div>
-                      				</div>
-                      				<div class="texto-simples row"> De: ${produto.oldPrice}</div>
-                      				<div class="row">
-                      					<span class="texto-destaque">  Por: </span>
-                      					<span class="super-preco">${produto.price}</span> </div>
-                      				<div class="texto-destaque row"><strong> ${produto.productInfo.paymentConditions}</strong></div>
-                      				<div class="texto-destaque row">sem juros</div>
-                      			</div>`).join('\n')
+
+                          + lista.map((produto) => {
+                                let elemment = `<div class="produto col-md-2">
+                                        				<img onclick="window.location.href='${produto.detailUrl}'" class="row center" src='${produto.imageName}' >
+                                        				<div class="row">
+                                        					<div onclick="window.location.href='${produto.detailUrl}'" class="descricao"> ${produto.name}</div>
+                                        				</div>`
+
+                                if(produto.oldPrice != null){
+                          				elemment += `<div class="texto-simples row"> De: ${produto.oldPrice}</div>`
+                                }
+
+                          			elemment +=	`<div class="row">
+                                  					<span class="texto-destaque">  Por: </span>
+                                  					<span class="super-preco">${produto.price}</span> </div>
+                                      				<div class="texto-destaque row"><strong> ${produto.productInfo.paymentConditions}</strong></div>
+                                      				<div class="texto-destaque row">sem juros</div>
+                                      			</div>`
+
+                                return elemment;
+                          }).join('\n')
+
                             + 	`<div class="seta col-md-1">
-                            			<a class="page-link" href="#" aria-label="Previous">
+                            			<a  id="seta-direita" class="page-link" href="#" aria-label="Previous">
                             				<span onclick="more_recommendation(3)" aria-hidden="true">&raquo;</span>
                             			</a>
                             </div>`
-
 }
 
 function more_recommendation(n){
@@ -117,5 +126,19 @@ function more_recommendation(n){
   if(n < 0 & (n_sugestoes - 3) > -1){
     create_sugestao(recommendations.slice(n_sugestoes - 3, n_sugestoes))
     n_sugestoes = n_sugestoes - 3
+  }
+  let esquerda = document.getElementById('seta-esquerda')
+  let direita = document.getElementById('seta-direita')
+
+  if(n_sugestoes === 0){
+    esquerda.innerHTML = `<span onclick="more_recommendation(-3)" style="color:gray" aria-hidden="true">&laquo;</span>`
+  } else{
+    esquerda.innerHTML = `<span onclick="more_recommendation(-3)" style="color:#23527c" aria-hidden="true">&laquo;</span>`
+  }
+
+  if(n_sugestoes + 2 >= recommendations.length -1){
+    direita.innerHTML = `<span onclick="more_recommendation(3)" style="color:gray" aria-hidden="true">&raquo;</span>`
+  } else{
+    direita.innerHTML = `<span onclick="more_recommendation(3)" style="color:#23527c" aria-hidden="true">&raquo;</span>`
   }
 }
