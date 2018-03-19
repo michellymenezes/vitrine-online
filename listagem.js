@@ -8,7 +8,7 @@ const sugestao = document.getElementById('sugestao')
 
 create_bar("Você visitou:", "e talvez se interesse por:")
 
-let link = 'http://roberval.chaordicsystems.com/challenge/challenge.json?callback=X';
+let link = 'https://cors-anywhere.herokuapp.com/http://roberval.chaordicsystems.com/challenge/challenge.json?callback=X';
 
 let get_data = (url) => {
   return fetch(url)
