@@ -27,17 +27,16 @@ let get_data = (url) => {
         });
 }
 
-let data, recommendations, product;
+let data, recommendations, product, n_sugestoes;
 
 get_data(link).then(function(value) {
   recommendations = value.data.recommendation
   recommendations.map((e) => produto(e))
   product = produto(value.data.reference.item)
+  n_sugestoes = 0//(recommendations.slice(0,3).length) - 1
 
   create_visitado(product)
   create_sugestao(recommendations.slice(0,3))
-
-  console.log(recommendations.slice(0,4));
 });
 
 
@@ -86,7 +85,7 @@ function create_visitado(produto){
 function create_sugestao(lista){
   sugestao.innerHTML = `<div class="seta col-md-1">
                     			<a class="page-link" href="#" aria-label="Previous">
-                    				<span aria-hidden="true">&laquo;</span>
+                    				<span onclick="more_recommendation(-3)" aria-hidden="true">&laquo;</span>
                     			</a>
                           </div>`
                           + lista.map((produto) => `<div class="produto col-md-2">
@@ -103,8 +102,20 @@ function create_sugestao(lista){
                       			</div>`).join('\n')
                             + 	`<div class="seta col-md-1">
                             			<a class="page-link" href="#" aria-label="Previous">
-                            				<span aria-hidden="true">&raquo;</span>
+                            				<span onclick="more_recommendation(3)" aria-hidden="true">&raquo;</span>
                             			</a>
                             </div>`
 
+}
+
+function more_recommendation(n){
+  if(n > 0 & (n_sugestoes + 3) < recommendations.length){
+    create_sugestao(recommendations.slice(n_sugestoes + 3, n_sugestoes + 6))
+    n_sugestoes = n_sugestoes + 3
+  }
+
+  if(n < 0 & (n_sugestoes - 3) > -1){
+    create_sugestao(recommendations.slice(n_sugestoes - 3, n_sugestoes))
+    n_sugestoes = n_sugestoes - 3
+  }
 }
